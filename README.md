@@ -46,13 +46,14 @@ Platform untuk merencanakan, memproduksi, dan mengunggah video YouTube dengan ba
 
 ### 1. Supabase
 
-Proyek: `https://wnyvkeodfuouoxnfsyao.supabase.co`. Di **SQL Editor**, jalankan berurutan:
+Proyek: `https://jeyxnvtqhxlxfyutpwmx.supabase.co`. Di **SQL Editor**, jalankan berurutan:
 
 1. `supabase/migrations/20261122000001_init_schema.sql`: tabel, RLS, storage bucket, fungsi antrean
 2. `supabase/migrations/20261122000002_cron.sql`: jadwal sinkron analitik, laporan, dan auto-pick ide. Ekstensi **pg_cron** ikut diaktifkan; kalau gagal, aktifkan manual di Database → Extensions lalu jalankan ulang.
-3. `supabase/seed.sql`: 7 prompt template bawaan (aman dijalankan ulang)
+3. `supabase/migrations/20261122000003_grants.sql`: izin akses tabel untuk server & user login. **Wajib** di proyek Supabase baru; tanpa ini muncul error `permission denied for table ...`.
+4. `supabase/seed.sql`: 7 prompt template bawaan (aman dijalankan ulang)
 
-Atau dengan Supabase CLI: `supabase link --project-ref wnyvkeodfuouoxnfsyao`, lalu `supabase db push`.
+Atau dengan Supabase CLI: `supabase link --project-ref jeyxnvtqhxlxfyutpwmx`, lalu `supabase db push`.
 
 Di **Authentication → URL Configuration**, isi:
 
@@ -76,6 +77,18 @@ npm run worker                 # di terminal lain: memproses antrean
 ```
 
 API key AI/stock/TTS bisa diisi di `.env.local` (berlaku untuk semua user) atau per user di halaman **Settings** (disimpan terenkripsi, diutamakan).
+
+### Deploy ke Vercel
+
+Proyek Vercel: `dwp_earnyoutube` (https://dwpearnyoutube.vercel.app). Variabel Supabase sudah diisi otomatis oleh integrasi Supabase–Vercel. Tambahkan sendiri di **Settings → Environment Variables**, lalu **Redeploy**:
+
+- `APP_URL=https://dwpearnyoutube.vercel.app`
+- `TOKEN_ENCRYPTION_KEY`: **sama persis** dengan di `.env.local` (dan di mesin worker)
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, serta API key AI/stock bila tidak diisi per user di Settings
+
+Tambahkan juga redirect URI `https://dwpearnyoutube.vercel.app/api/youtube/callback` di Google Cloud, serta Site URL & Redirect URL (`/auth/callback`) domain Vercel di Supabase Auth.
+
+**Worker tidak bisa berjalan di Vercel** (proses panjang + FFmpeg). Jalankan `npm run worker` di komputer sendiri atau server yang selalu menyala (VPS, Railway, Render, Fly.io) dengan variabel lingkungan yang sama.
 
 ### Skrip
 

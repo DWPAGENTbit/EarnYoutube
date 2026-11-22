@@ -27,5 +27,7 @@ YouTube Auto Creator Platform: AI menyusun rencana, naskah, voice, render, metad
 - Jangan pernah mengunggah tanpa persetujuan: upload hanya dari status `approved`/`uploading`; `auto_publish` default `false`.
 - Secret (token OAuth, API key) hanya di server/worker, terenkripsi `src/lib/crypto.ts`. `src/lib/supabase/admin.ts` (service role) tidak boleh diimpor Client Component.
 - Aset wajib punya `license_source`; video dengan narasi AI wajib `containsSyntheticMedia = true`.
-- Supabase proyek `wnyvkeodfuouoxnfsyao` ada di akun lain (MCP tidak punya akses): perubahan skema = file migrasi baru yang dijalankan user di SQL Editor.
+- Supabase proyek `jeyxnvtqhxlxfyutpwmx` (terhubung ke Vercel `dwp_earnyoutube` lewat integrasi) ada di akun lain (MCP tidak punya akses): perubahan skema = file migrasi baru yang dijalankan user di SQL Editor.
+- Proyek Supabase baru tidak memberi izin tabel otomatis: tabel baru wajib diberi `grant` eksplisit (lihat migrasi `..._grants.sql`).
+- Tampilan: tema tunggal "Ocean Glass" (gradasi biru + kartu kaca), token di `src/app/globals.css`; aplikasi selalu memakai kelas `.dark`. Jangan menambah latar hitam/putih polos.
 - Sebelum commit: `npm run typecheck`, `npm run lint`, `npx next build`.
