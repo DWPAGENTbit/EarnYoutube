@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ActionButton, ActionForm, AutoRefresh, SubmitButton } from "@/components/app/action-ui";
 import { PageHeader } from "@/components/app/ui-bits";
+import { GoogleOAuthSetup, googleOAuthStatus } from "@/components/app/google-oauth";
 import { disconnectYouTube, runChannelModule, saveChannel } from "../actions";
 import type { M1Output, M2Output } from "@/lib/ai/schemas";
 import type { Channel } from "@/lib/types";
@@ -16,7 +17,8 @@ export const metadata = { title: "Channel Setup" };
 
 export default async function ChannelPage({ searchParams }: PageProps<"/channel">) {
   const sp = await searchParams;
-  const { supabase, channel: active } = await getActiveChannel();
+  const { supabase, user, channel: active } = await getActiveChannel();
+  const google = await googleOAuthStatus(user.id);
   const isNew = sp.new === "1" || !active;
   const channel = isNew ? null : (active as Channel);
   const { data: pending } = channel
@@ -82,7 +84,7 @@ export default async function ChannelPage({ searchParams }: PageProps<"/channel"
             <CardHeader>
               <CardTitle>Akun YouTube</CardTitle>
               <CardDescription>
-                OAuth 2.0 dengan izin upload, baca kanal, dan baca analitik. Token disimpan terenkripsi di server.
+                Izin upload, baca kanal, dan baca analitik. Semua kredensial & token disimpan terenkripsi di server.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -114,10 +116,23 @@ export default async function ChannelPage({ searchParams }: PageProps<"/channel"
                     </ActionButton>
                   </div>
                 </>
+              ) : !google.ready ? (
+                <GoogleOAuthSetup userId={user.id} />
               ) : (
-                <Button asChild>
-                  <a href={`/api/youtube/connect?channel=${channel.id}`}>Hubungkan akun YouTube</a>
-                </Button>
+                <div className="space-y-3">
+                  <p className="text-sm text-muted-foreground">Kredensial Google siap. Klik untuk memilih akun YouTube Anda.</p>
+                  <Button asChild size="lg">
+                    <a href={`/api/youtube/connect?channel=${channel.id}`}>Hubungkan akun YouTube</a>
+                  </Button>
+                </div>
+              )}
+              {channel && google.ready && (
+                <details className="group rounded-2xl border border-white/60 bg-white/30 p-3">
+                  <summary className="cursor-pointer text-sm font-medium">Ubah kredensial Google (Client ID & Secret)</summary>
+                  <div className="mt-4">
+                    <GoogleOAuthSetup userId={user.id} />
+                  </div>
+                </details>
               )}
             </CardContent>
           </Card>

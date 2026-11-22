@@ -13,7 +13,9 @@ export async function GET(request: NextRequest) {
   const { data: channel } = await supabase.from("channels").select("id").eq("id", channelId).maybeSingle();
   if (!channel) return NextResponse.redirect(new URL("/channel?error=Kanal%20tidak%20ditemukan", request.url));
   try {
-    return NextResponse.redirect(buildAuthUrl(makeState({ channelId, userId: auth.user.id })));
+    return NextResponse.redirect(
+      await buildAuthUrl(auth.user.id, makeState({ channelId, userId: auth.user.id }), request.nextUrl.origin),
+    );
   } catch (e) {
     return NextResponse.redirect(new URL(`/channel?error=${encodeURIComponent((e as Error).message)}`, request.url));
   }

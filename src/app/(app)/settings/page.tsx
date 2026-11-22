@@ -11,6 +11,7 @@ import { ActionButton, ActionForm, SubmitButton } from "@/components/app/action-
 import { NeedChannel, PageHeader, fmtDate } from "@/components/app/ui-bits";
 import { removeApiKey, saveApiKey, saveSettings, saveTemplate } from "../actions";
 import { channelSettings } from "@/lib/types";
+import { GoogleOAuthSetup } from "@/components/app/google-oauth";
 
 export const metadata = { title: "Settings" };
 
@@ -35,6 +36,16 @@ export default async function SettingsPage() {
   return (
     <>
       <PageHeader title="Settings" description="API key disimpan terenkripsi (AES-256-GCM) di server dan tidak pernah dikirim kembali ke browser." />
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Koneksi Google (YouTube)</CardTitle>
+          <CardDescription>Client ID & Secret OAuth dari Google Cloud. Dipakai untuk tombol Hubungkan YouTube di halaman Channel.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <GoogleOAuthSetup userId={user.id} />
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

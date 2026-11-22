@@ -19,15 +19,14 @@ export function ChannelSwitcher({
     return (
       <Link
         href="/channel"
-        className="flex items-center gap-2 rounded-md border border-dashed px-2.5 py-2 text-sm text-muted-foreground hover:bg-muted"
+        className="flex h-10 items-center gap-2 rounded-full border border-dashed border-foreground/25 bg-white/50 px-4 text-sm text-foreground/70 hover:bg-white/80"
       >
         <Plus className="size-4" /> Buat kanal
       </Link>
     );
   }
   return (
-    <div className="space-y-1">
-      <p className="px-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Kanal</p>
+    <div>
       <Select
         value={activeId ?? undefined}
         disabled={pending}
@@ -39,7 +38,7 @@ export function ChannelSwitcher({
           start(() => selectChannel(v));
         }}
       >
-        <SelectTrigger className="w-full">
+        <SelectTrigger aria-label="Pilih kanal" className="w-full rounded-full border-white/80 bg-white/70 px-4 shadow-sm data-[size=default]:h-10">
           <SelectValue placeholder="Pilih kanal" />
         </SelectTrigger>
         <SelectContent>

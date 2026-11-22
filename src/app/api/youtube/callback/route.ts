@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       .single();
     if (!channel || channel.user_id !== user.id) throw new Error("Kanal tidak ditemukan.");
 
-    const tok = await exchangeCode(sp.get("code") ?? "");
+    const tok = await exchangeCode(user.id, sp.get("code") ?? "", request.nextUrl.origin);
     const granted = tok.scope.split(" ");
     const missing = YT_SCOPES.filter((s) => !granted.includes(s));
     if (missing.length) throw new Error(`Izin belum lengkap: ${missing.map((m) => m.split("/").pop()).join(", ")}. Centang semua izin saat menghubungkan.`);

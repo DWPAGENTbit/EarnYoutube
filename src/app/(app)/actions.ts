@@ -7,7 +7,7 @@ import { approveVideo, createVideoFromIdea, enqueue, retryVideo } from "@/lib/pi
 import { findStock, downloadFile } from "@/lib/pipeline/stock";
 import { objectPath, putObject } from "@/lib/storage";
 import { deleteSecret, setSecret } from "@/lib/secrets";
-import { SECRET_NAMES, type SecretName } from "@/lib/env";
+import { GOOGLE_SECRET_NAMES, SECRET_NAMES, type SecretName } from "@/lib/env";
 import { revokeCredentials } from "@/lib/youtube/oauth";
 import { DEFAULT_SETTINGS, channelSettings, type ChannelSettings, type Video } from "@/lib/types";
 import type { M3Output } from "@/lib/ai/schemas";
@@ -336,12 +336,48 @@ export async function saveApiKey(_: ActionState, form: FormData): Promise<Action
   try {
     const { user } = await requireUser();
     const name = str(form, "name") as SecretName;
-    if (!SECRET_NAMES.includes(name)) throw new Error("Nama key tidak dikenal.");
+    if (!(SECRET_NAMES as readonly string[]).includes(name)) throw new Error("Nama key tidak dikenal.");
     const value = str(form, "value");
     if (value.length < 8) throw new Error("Key terlalu pendek.");
     await setSecret(user.id, name, value);
     revalidatePath("/settings");
     return ok(`${name} tersimpan (terenkripsi di server).`);
+  } catch (e) {
+    return fail(e);
+  }
+}
+
+/** Simpan Client ID & Secret OAuth Google (terenkripsi). Secret kosong = tidak diubah. */
+export async function saveGoogleOAuth(_: ActionState, form: FormData): Promise<ActionState> {
+  try {
+    const { user } = await requireUser();
+    const clientId = str(form, "client_id");
+    const clientSecret = str(form, "client_secret");
+    if (clientId) {
+      if (!/^[\w-]+\.apps\.googleusercontent\.com$/.test(clientId))
+        throw new Error("Client ID harus berakhiran .apps.googleusercontent.com");
+      await setSecret(user.id, "GOOGLE_CLIENT_ID", clientId);
+    }
+    if (clientSecret) {
+      if (clientSecret.length < 10) throw new Error("Client Secret terlalu pendek.");
+      await setSecret(user.id, "GOOGLE_CLIENT_SECRET", clientSecret);
+    }
+    if (!clientId && !clientSecret) throw new Error("Isi Client ID dan/atau Client Secret.");
+    revalidatePath("/channel");
+    revalidatePath("/settings");
+    return ok("Kredensial Google tersimpan (terenkripsi). Sekarang klik Hubungkan YouTube.");
+  } catch (e) {
+    return fail(e);
+  }
+}
+
+export async function removeGoogleOAuth(): Promise<ActionState> {
+  try {
+    const { user } = await requireUser();
+    for (const n of GOOGLE_SECRET_NAMES) await deleteSecret(user.id, n);
+    revalidatePath("/channel");
+    revalidatePath("/settings");
+    return ok("Kredensial Google dihapus.");
   } catch (e) {
     return fail(e);
   }

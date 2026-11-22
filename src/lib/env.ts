@@ -13,8 +13,6 @@ export const env = {
   supabaseServiceKey: () => required("SUPABASE_SERVICE_ROLE_KEY"),
   appUrl: () => process.env.APP_URL ?? "http://localhost:3000",
   tokenEncryptionKey: () => required("TOKEN_ENCRYPTION_KEY"),
-  googleClientId: () => required("GOOGLE_CLIENT_ID"),
-  googleClientSecret: () => required("GOOGLE_CLIENT_SECRET"),
   anthropicModel: () => process.env.ANTHROPIC_MODEL ?? "claude-opus-5-5",
 };
 
@@ -26,4 +24,6 @@ export const SECRET_NAMES = [
   "PEXELS_API_KEY",
   "PIXABAY_API_KEY",
 ] as const;
-export type SecretName = (typeof SECRET_NAMES)[number];
+/** Kredensial OAuth Google (diisi per user di web: halaman Channel / Settings). */
+export const GOOGLE_SECRET_NAMES = ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"] as const;
+export type SecretName = (typeof SECRET_NAMES)[number] | (typeof GOOGLE_SECRET_NAMES)[number];

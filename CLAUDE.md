@@ -29,5 +29,6 @@ YouTube Auto Creator Platform: AI menyusun rencana, naskah, voice, render, metad
 - Aset wajib punya `license_source`; video dengan narasi AI wajib `containsSyntheticMedia = true`.
 - Supabase proyek `jeyxnvtqhxlxfyutpwmx` (terhubung ke Vercel `dwp_earnyoutube` lewat integrasi) ada di akun lain (MCP tidak punya akses): perubahan skema = file migrasi baru yang dijalankan user di SQL Editor.
 - Proyek Supabase baru tidak memberi izin tabel otomatis: tabel baru wajib diberi `grant` eksplisit (lihat migrasi `..._grants.sql`).
-- Tampilan: tema tunggal "Ocean Glass" (gradasi biru + kartu kaca), token di `src/app/globals.css`; aplikasi selalu memakai kelas `.dark`. Jangan menambah latar hitam/putih polos.
+- Tampilan: tema tunggal "Warm Glass" (latar ruangan hangat yang buram + panel kaca putih, aksen teal, tombol pil hitam/putih), token & utilitas `glass`/`glass-strong`/`hatch` di `src/app/globals.css`; tema terang dipaksa (forcedTheme="light"). Kerangka: top bar kaca, rail ikon kiri, tab bar pil bawah (`src/components/app/shell.tsx`). Jangan menambah latar hitam/putih polos.
+- Kredensial Google OAuth diisi pengguna lewat web (Channel / Settings), disimpan terenkripsi di `user_secrets`; env GOOGLE_CLIENT_ID/SECRET hanya cadangan.
 - Sebelum commit: `npm run typecheck`, `npm run lint`, `npx next build`.
