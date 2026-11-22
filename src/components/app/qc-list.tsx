@@ -7,7 +7,7 @@ export function QcList({ qc }: { qc: QcResult }) {
       {qc.checks.map((c) => (
         <li key={c.id} className="flex gap-2">
           {c.pass ? (
-            <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-600" />
+            <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-300" />
           ) : (
             <XCircle className="mt-0.5 size-4 shrink-0 text-destructive" />
           )}

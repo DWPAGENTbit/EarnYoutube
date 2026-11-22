@@ -22,16 +22,16 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
         reviewCount={reviewCount}
         channelSwitcher={<ChannelSwitcher channels={channels} activeId={channel?.id ?? null} />}
         footer={
-          <form action={signOut} className="flex items-center justify-between gap-2 border-t pt-3">
+          <form action={signOut} className="flex items-center justify-between gap-2 border-t border-white/15 pt-3">
             <span className="truncate text-xs text-muted-foreground">{user.email}</span>
-            <button aria-label="Keluar" className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground">
+            <button aria-label="Keluar" className="rounded-md p-1.5 text-white/70 transition-colors hover:bg-white/15 hover:text-white">
               <LogOut className="size-4" />
             </button>
           </form>
         }
       />
       <main className="min-w-0 flex-1 px-4 py-6 md:px-8 md:py-8">
-        <div className="mx-auto max-w-6xl space-y-6">{children}</div>
+        <div className="mx-auto max-w-6xl">{children}</div>
       </main>
     </div>
   );
