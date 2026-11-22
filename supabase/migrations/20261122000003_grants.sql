@@ -32,3 +32,11 @@ revoke all on all tables in schema public from anon;
 alter default privileges in schema public grant all on tables to service_role;
 alter default privileges in schema public grant all on sequences to service_role;
 alter default privileges in schema public grant execute on functions to service_role;
+
+-- Hasil pengecekan (tampil di SQL Editor). Semua kolom harus bernilai true.
+select
+  current_database() as database,
+  has_table_privilege('service_role', 'public.user_secrets', 'select') as server_bisa_baca_user_secrets,
+  has_table_privilege('service_role', 'public.channels', 'insert') as server_bisa_tulis_channels,
+  has_table_privilege('authenticated', 'public.channels', 'select') as user_login_bisa_baca_channels,
+  not has_table_privilege('authenticated', 'public.user_secrets', 'select') as user_secrets_tertutup_untuk_user;
